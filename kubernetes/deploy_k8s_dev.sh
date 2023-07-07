@@ -3,7 +3,8 @@
 echo "Deploy k8s cluster..."
 
 echo "Installing kubelet kubeadm kubectl..."
-hostnamectl set-hostname fonfon-dev
+read -p "Enter hostname for this server: " custom_hostname
+hostnamectl set-hostname $custom_hostname
 apt update
 apt upgrade -y
 apt install curl gnupg2 apt-transport-https -y
@@ -55,7 +56,7 @@ chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 echo "Allowing scheduling of pods on master node..."
-kubectl taint node fonfon-dev node-role.kubernetes.io/control-plane:NoSchedule-
+kubectl taint node $custom_hostname node-role.kubernetes.io/control-plane:NoSchedule-
 
 echo "Installing helm..."
 curl https://baltocdn.com/helm/signing.asc | apt-key add -
