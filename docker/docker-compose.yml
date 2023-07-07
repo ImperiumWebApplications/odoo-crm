@@ -1,0 +1,35 @@
+version: '3.1'
+services:
+  web:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - web-data:/var/lib/odoo
+    environment:
+      - USER=odoo_user
+      - PASSWORD_FILE=/run/secrets/postgresql-password
+    secrets:
+      - postgresql-password
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql-password
+      - POSTGRES_USER=odoo_user
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgresql-password
+volumes:
+  web-data:
+  db-data:
+
+secrets:
+  postgresql-password:
+    file: ../credentials/odoo-pg-pass

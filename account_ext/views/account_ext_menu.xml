@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_ext_menu_countries"
+              name="Countries"
+              sequence="30"
+              parent="account.menu_finance_configuration"
+              groups="account.group_account_user,account.group_account_manager">
+        <menuitem id="account_ext_menu_countries_countries"
+                  name="Countries"
+                  sequence="10"
+                  action="account_ext_show_countries_action"
+                  groups="account.group_account_user,account.group_account_manager" />
+    </menuitem>
+    <menuitem id="account_ext_menu_banks_main_data"
+              name="Banks main data"
+              sequence="40"
+              parent="account.menu_finance_configuration"
+              groups="account.group_account_user,account.group_account_manager">
+        <menuitem id="account_ext_menu_banks_main_data_banks"
+                  name="Banks main data"
+                  sequence="10"
+                  action="account_ext_show_banks_action"
+                  groups="account.group_account_user,account.group_account_manager"/>
+        <menuitem id="account_ext_menu_banks_main_data_partner_banks"
+                  name="Partner banks"
+                  sequence="20"
+                  action="account_ext_show_partner_banks_action"
+                  groups="account.group_account_user,account.group_account_manager"/>
+    </menuitem>
+</odoo>

@@ -1,0 +1,4 @@
+apiVersion: v2
+name: leadquelle
+description: A Helm chart for deploying fonfon modules for odoo
+version: 1.0.0

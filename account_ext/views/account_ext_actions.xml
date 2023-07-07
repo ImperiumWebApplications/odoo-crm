@@ -1,0 +1,40 @@
+<odoo>
+    <record id="account_ext_show_countries_action" model="ir.actions.act_window">
+        <field name="name">Countries</field>
+        <field name="res_model">res.country</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                List of the countries
+              </p><p>
+                Use this to view and edit countries.
+              </p>
+        </field>
+    </record>
+
+    <record id="account_ext_show_banks_action" model="ir.actions.act_window">
+        <field name="name">Banks main data</field>
+        <field name="res_model">res.bank</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                List of the banks
+              </p><p>
+                Use this to view and edit banks.
+              </p>
+        </field>
+    </record>
+
+    <record id="account_ext_show_partner_banks_action" model="ir.actions.act_window">
+        <field name="name">Partner banks</field>
+        <field name="res_model">res.partner.bank</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                List of the partner banks
+              </p><p>
+                Use this to view and edit partner banks.
+              </p>
+        </field>
+    </record>
+</odoo>

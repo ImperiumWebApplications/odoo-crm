@@ -1,0 +1,195 @@
+variables:
+  ERP_BASE_DOMAIN: leadquelle.com
+  ROLLOUT_RESOURCE_TYPE: deployment
+  KUBE_NAMESPACE: "leadquelle"
+  REVIEW_DISABLED: "true"
+  HELM_UPGRADE_EXTRA_ARGS: "--set gitlab.env=$CI_ENVIRONMENT_SLUG,gitlab.app=$CI_PROJECT_PATH_SLUG"
+
+stages:
+  - build
+  - test
+  - backup
+  - deploy
+  - review  # off-stage
+  - staging
+  - canary
+  - production
+  - incremental rollout 10%
+  - incremental rollout 25%
+  - incremental rollout 50%
+  - incremental rollout 100%
+  - cleanup  # off-stage
+
+build:
+  rules:
+    - if: '$BUILD_DISABLED'
+      when: never
+    - if: '$CI_COMMIT_BRANCH != "dev" && $CI_COMMIT_BRANCH != "prod"'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+
+
+# Common
+
+
+.backup: &backup_template
+  extends: .auto-deploy
+  stage: backup
+  script:
+    - |
+      if echo "$CI_COMMIT_DESCRIPTION $CI_COMMIT_MESSAGE" | grep -q "\[$BACKUP_LABEL\]"; then
+        echo "Found '$BACKUP_LABEL' label on the merge request"
+        export BACKUP_LABEL_FOUND=1
+      else
+        echo "No 'with-backup' label found on the merge request"
+        export BACKUP_LABEL_FOUND=0
+      fi
+      
+      # First condition is for backup if label found is found and do nothing by default
+      # Second condition is for do nothing if label found and do back by default
+      if [[ $BACKUP_LABEL_FOUND -eq 1 && $DO_BACKUP_BY_DEFAULT -ne 1 ]] || [[ $BACKUP_LABEL_FOUND -eq 0 && $DO_BACKUP_BY_DEFAULT -eq 1 ]] 
+      then
+        env_string=$(echo "$K8S_SECRET_ENV" | while IFS= read -r line; do
+          var="${line%=*}"
+          value="${line#*=}"
+          echo "export ${var}=${value};"
+        done)
+        source <(echo "${env_string}")
+      
+        auto-deploy check_kube_domain
+        auto-deploy download_chart
+        auto-deploy use_kube_context || true
+        auto-deploy ensure_namespace
+        auto-deploy create_secret
+        apk update && apk add openssh
+        echo "Backuping db..."    
+        mkdir -p ~/.ssh
+        echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "mkdir -p backups"
+        ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "mkdir -p backups/ffn-odoo"
+        ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "tar -czvf ./backups/ffn-odoo/ffn-odoo-$(date +%Y-%m-%d-%H-%M).tar.gz /opt/data/db-data"
+        echo "Backuping db... done"
+      else
+        echo "No need in backup"
+      fi
+  variables:
+    # Should be replaced
+    BACKUP_LABEL: "no-backup"
+    DO_BACKUP_BY_DEFAULT: 1
+
+
+.deploy: &deploy_template
+  extends: .auto-deploy
+  stage: deploy
+  script:
+    - |
+      if [[ -z "$CI_COMMIT_TAG" ]]; then
+        export CI_APPLICATION_REPOSITORY=${CI_APPLICATION_REPOSITORY:-$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG}
+        export CI_APPLICATION_TAG=${CI_APPLICATION_TAG:-$CI_COMMIT_SHA}
+      else
+        export CI_APPLICATION_REPOSITORY=${CI_APPLICATION_REPOSITORY:-$CI_REGISTRY_IMAGE}
+        export CI_APPLICATION_TAG=${CI_APPLICATION_TAG:-$CI_COMMIT_TAG}
+      fi
+    - |
+      env_string=$(echo "$K8S_SECRET_ENV" | while IFS= read -r line; do
+        var="${line%=*}"
+        value="${line#*=}"
+        echo "export ${var}=${value};"
+      done)
+      source <(echo "${env_string}")
+    - export WEB_DOCKER_IMAGE=${WEB_DOCKER_IMAGE:-$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG}
+    - auto-deploy check_kube_domain
+    - auto-deploy download_chart
+    - auto-deploy use_kube_context || true
+    - auto-deploy ensure_namespace
+    - auto-deploy create_secret
+
+
+# Dev
+
+
+backup_dev:
+  <<: *backup_template
+  rules:
+    - if: '($CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == "") && ($KUBECONFIG == null || $KUBECONFIG == "")'
+      when: never
+    - if: '$CI_COMMIT_BRANCH != "dev"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+  variables:
+    BACKUP_LABEL: "with-backup"
+    DO_BACKUP_BY_DEFAULT: 0
+    K8S_SECRET_ENV: $ENV_DEV
+    SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY_DEV
+    SERVER_HOST: 194.163.184.161
+    KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle-dev"
+    KUBE_INGRESS_BASE_DOMAIN: "https://tst1.$ERP_BASE_DOMAIN"
+
+
+deploy_dev:
+  <<: *deploy_template
+  rules:
+    - if: '($CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == "") && ($KUBECONFIG == null || $KUBECONFIG == "")'
+      when: never
+    - if: '$CI_COMMIT_BRANCH != "dev"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+  environment:
+    name: dev
+    url: https://tst1.$ERP_BASE_DOMAIN
+  variables:
+    K8S_SECRET_ENV: "$ENV_DEV"
+    KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle-dev"
+    KUBE_INGRESS_BASE_DOMAIN: "https://tst1.$ERP_BASE_DOMAIN"
+    ERP_DOMAIN: "tst1.$ERP_BASE_DOMAIN"
+
+
+# Production
+
+
+backup_production:
+  <<: *backup_template
+  rules:
+    - if: '($CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == "") && ($KUBECONFIG == null || $KUBECONFIG == "")'
+      when: never
+    - if: '$CI_COMMIT_BRANCH != "prod"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+  variables:
+    BACKUP_LABEL: "no-backup"
+    DO_BACKUP_BY_DEFAULT: 1
+    K8S_SECRET_ENV: $ENV_PROD
+    SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY_PROD
+    SERVER_HOST: 194.163.180.249
+    KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle"
+    KUBE_INGRESS_BASE_DOMAIN: "https://tst1.$ERP_BASE_DOMAIN"
+
+
+deploy_production:
+  <<: *deploy_template
+  rules:
+    - if: '($CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == "") && ($KUBECONFIG == null || $KUBECONFIG == "")'
+      when: never
+    - if: '$CI_COMMIT_BRANCH != "prod"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+  environment:
+    name: dev
+    url: https://tst1.$ERP_BASE_DOMAIN
+  variables:
+    K8S_SECRET_ENV: "$ENV_PROD"
+    KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle"
+    KUBE_INGRESS_BASE_DOMAIN: "https://$ERP_BASE_DOMAIN"
+    ERP_DOMAIN: "$ERP_BASE_DOMAIN"
+
+
+production:
+  rules:
+    - when: never
+
+
+
+include:
+  - template: Jobs/Build.gitlab-ci.yml
+  - template: Jobs/Deploy.gitlab-ci.yml

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    type: data
+  name: db-data-persistent-volume
+  namespace: leadquelle
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 16G
+  hostPath:
+    path: /opt/data/db-data
+    type: ""
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - amd64
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  claimRef:
+    namespace: leadquelle
+    name: db-data
+  volumeMode: Filesystem
+---
