@@ -1,5 +1,5 @@
 variables:
-  ERP_BASE_DOMAIN: leadquelle.com
+  BASE_DOMAIN: leadquelle.net
   ROLLOUT_RESOURCE_TYPE: deployment
   KUBE_NAMESPACE: "leadquelle"
   REVIEW_DISABLED: "true"
@@ -131,7 +131,7 @@ backup_dev:
     SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY_DEV
     SERVER_HOST: 194.163.184.161
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle-dev"
-    KUBE_INGRESS_BASE_DOMAIN: "https://tst1.portal.$ERP_BASE_DOMAIN"
+    KUBE_INGRESS_BASE_DOMAIN: "https://tst1.portal.$BASE_DOMAIN"
 
 
 deploy_dev:
@@ -144,12 +144,12 @@ deploy_dev:
     - if: '$CI_COMMIT_BRANCH == "dev"'
   environment:
     name: dev
-    url: https://tst1.$ERP_BASE_DOMAIN
+    url: https://tst1.$BASE_DOMAIN
   variables:
     K8S_SECRET_ENV: "$ENV_DEV"
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle-dev"
-    KUBE_INGRESS_BASE_DOMAIN: "https://tst1.portal.$ERP_BASE_DOMAIN"
-    ERP_DOMAIN: "tst1.$ERP_BASE_DOMAIN"
+    KUBE_INGRESS_BASE_DOMAIN: "https://tst1.portal.$BASE_DOMAIN"
+    ERP_DOMAIN: "tst1.$BASE_DOMAIN"
 
 
 # Production
@@ -170,7 +170,7 @@ backup_production:
     SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY_PROD
     SERVER_HOST: 194.163.180.249
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle"
-    KUBE_INGRESS_BASE_DOMAIN: "https://portal.$ERP_BASE_DOMAIN"
+    KUBE_INGRESS_BASE_DOMAIN: "https://portal.$BASE_DOMAIN"
 
 
 deploy_production:
@@ -183,12 +183,12 @@ deploy_production:
     - if: '$CI_COMMIT_BRANCH == "prod"'
   environment:
     name: dev
-    url: https://tst1.$ERP_BASE_DOMAIN
+    url: https://tst1.$BASE_DOMAIN
   variables:
     K8S_SECRET_ENV: "$ENV_PROD"
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle"
-    KUBE_INGRESS_BASE_DOMAIN: "https://portal.$ERP_BASE_DOMAIN"
-    ERP_DOMAIN: "$ERP_BASE_DOMAIN"
+    KUBE_INGRESS_BASE_DOMAIN: "https://portal.$BASE_DOMAIN"
+    ERP_DOMAIN: "$BASE_DOMAIN"
 
 
 production:
