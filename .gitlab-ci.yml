@@ -67,8 +67,8 @@ build:
         echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "mkdir -p backups"
-        ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "mkdir -p backups/ffn-odoo"
-        ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "tar -czvf ./backups/ffn-odoo/ffn-odoo-$(date +%Y-%m-%d-%H-%M).tar.gz /opt/data/db-data"
+        ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "mkdir -p backups/leadquelle"
+        ssh -o StrictHostKeyChecking=no root@$SERVER_HOST "tar -czvf ./backups/leadquelle/leadquelle-$(date +%Y-%m-%d-%H-%M).tar.gz /opt/data/db-data"
         echo "Backuping db... done"
       else
         echo "No need in backup"
