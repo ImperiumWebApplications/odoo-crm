@@ -104,6 +104,12 @@ build:
     - auto-deploy use_kube_context || true
     - auto-deploy ensure_namespace
     - auto-deploy create_secret
+    - apk update && apk add gettext
+    - echo "Deploying leadquelle..."
+    - cd kubernetes/leadquelle
+    - helm package .
+    - envsubst < values.yaml | helm upgrade --install leadquelle ./leadquelle-1.0.0.tgz --values -
+    - echo "Deploying leadquelle... done"
 
 
 # Dev
