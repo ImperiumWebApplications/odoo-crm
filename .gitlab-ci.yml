@@ -149,7 +149,7 @@ deploy_dev:
     K8S_SECRET_ENV: "$ENV_DEV"
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle-dev"
     KUBE_INGRESS_BASE_DOMAIN: "https://tst1.portal.$BASE_DOMAIN"
-    ERP_DOMAIN: "tst1.$BASE_DOMAIN"
+    ERP_DOMAIN: "tst1.portal.$BASE_DOMAIN"
 
 
 # Production
@@ -188,7 +188,7 @@ deploy_production:
     K8S_SECRET_ENV: "$ENV_PROD"
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle"
     KUBE_INGRESS_BASE_DOMAIN: "https://portal.$BASE_DOMAIN"
-    ERP_DOMAIN: "$BASE_DOMAIN"
+    ERP_DOMAIN: "portal.$BASE_DOMAIN"
 
 
 production:
