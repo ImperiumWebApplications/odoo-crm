@@ -9,13 +9,12 @@ metadata:
   namespace: leadquelle
 spec:
   ingressClassName: nginx
-  tls:
-  - hosts:
-    - {{ .Values.env.ERP_DOMAIN }}
-    secretName: tst1-erp-fonfonllc-letsencrypt # TODO: параметризировать для PROD
+#  tls:
+#  - hosts:
+#    - {{ .Values.env.ERP_DOMAIN }}
+#    secretName: tst1-erp-fonfonllc-letsencrypt # TODO: параметризировать для PROD
   rules:
-  - host: {{ .Values.env.ERP_DOMAIN }}
-    http:
+    - http:
       paths:
       - pathType: Prefix
         path: "/"
@@ -38,3 +37,27 @@ spec:
             name: web
             port:
               name: gevent
+#  - host: {{ .Values.env.ERP_DOMAIN }}
+#    http:
+#      paths:
+#      - pathType: Prefix
+#        path: "/"
+#        backend:
+#          service:
+#            name: web
+#            port:
+#              name: web
+#      - pathType: Prefix
+#        path: "/longpolling/poll"
+#        backend:
+#          service:
+#            name: web
+#            port:
+#              name: gevent
+#      - pathType: Prefix
+#        path: "/websocket"
+#        backend:
+#          service:
+#            name: web
+#            port:
+#              name: gevent
