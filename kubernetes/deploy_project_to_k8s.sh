@@ -2,9 +2,11 @@
 
 echo "Deploy k8s cluster..."
 
+read -p "Enter the name for this project (will be used as namespace and names for custom k8s resources): " project_name
+export CLUSTER_PROJECT_NAME=$project_name
+
 echo "Installing kubelet kubeadm kubectl..."
-read -p "Enter hostname for this server: " custom_hostname
-hostnamectl set-hostname $custom_hostname
+hostnamectl set-hostname $project_name
 apt update
 apt upgrade -y
 apt install curl gnupg2 apt-transport-https -y
