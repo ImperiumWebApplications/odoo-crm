@@ -99,6 +99,8 @@ build:
       done)
       source <(echo "${env_string}")
     - export WEB_DOCKER_IMAGE=${WEB_DOCKER_IMAGE:-$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG}
+    - source /etc/environment
+    - printenv
     - auto-deploy check_kube_domain
     - auto-deploy download_chart
     - auto-deploy use_kube_context || true
