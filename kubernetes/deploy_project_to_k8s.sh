@@ -4,6 +4,7 @@ echo "Deploy k8s cluster..."
 
 read -p "Enter the name for this project (will be used as namespace and names for custom k8s resources): " project_name
 export CLUSTER_PROJECT_NAME=$project_name
+echo "CLUSTER_PROJECT_NAME=$project_name" | sudo tee -a /etc/environment
 
 echo "Installing kubelet kubeadm kubectl..."
 hostnamectl set-hostname $project_name
