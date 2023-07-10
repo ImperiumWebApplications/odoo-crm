@@ -151,7 +151,6 @@ deploy_dev:
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle-dev"
     KUBE_INGRESS_BASE_DOMAIN: "https://tst1.portal.$BASE_DOMAIN"
     ERP_DOMAIN: "tst1.portal.$BASE_DOMAIN"
-    CLUSTER_PROJECT_NAME: "leadquelle-dev"
 
 
 # Production
@@ -191,7 +190,6 @@ deploy_production:
     KUBE_CONTEXT: "$CI_PROJECT_PATH:leadquelle"
     KUBE_INGRESS_BASE_DOMAIN: "https://portal.$BASE_DOMAIN"
     ERP_DOMAIN: "portal.$BASE_DOMAIN"
-    CLUSTER_PROJECT_NAME: "leadquelle"
 
 
 production:
