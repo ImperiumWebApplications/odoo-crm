@@ -42,7 +42,7 @@ build:
         echo "Found '$BACKUP_LABEL' label on the merge request"
         export BACKUP_LABEL_FOUND=1
       else
-        echo "No 'with-backup' label found on the merge request"
+        echo "No '$BACKUP_LABEL' label found on the merge request"
         export BACKUP_LABEL_FOUND=0
       fi
       
