@@ -3,6 +3,7 @@
 echo "Deploy k8s cluster..."
 
 read -p "Enter hostname for this server: " custom_hostname
+export CLUSTER_PROJECT_NAME=$custom_hostname
 
 echo "Installing kubelet kubeadm kubectl..."
 hostnamectl set-hostname $custom_hostname
@@ -91,6 +92,7 @@ if [[ ! $ip_address =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     exit 1
 fi
 export METALLB_HOST=$ip_address
+printenv
 cd kubernetes/metallb
 helm package .
 envsubst < values.yaml | helm upgrade --install metallb-config ./metallb-config-1.0.0.tgz --values -
