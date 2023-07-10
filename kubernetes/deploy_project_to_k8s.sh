@@ -58,7 +58,7 @@ chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 echo "Allowing scheduling of pods on master node..."
-kubectl taint node $custom_hostname node-role.kubernetes.io/control-plane:NoSchedule-
+kubectl taint node $project_name node-role.kubernetes.io/control-plane:NoSchedule-
 
 echo "Installing helm..."
 curl https://baltocdn.com/helm/signing.asc | apt-key add -
@@ -86,7 +86,7 @@ kubectl apply -f - -n kube-system
 
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
 sleep 15s
-read -p "Enter metallb host IP-address: " ip_address
+read -p "Enter project host IP-address: " ip_address
 if [[ ! $ip_address =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "Wrong format for IP-address!"
     exit 1
