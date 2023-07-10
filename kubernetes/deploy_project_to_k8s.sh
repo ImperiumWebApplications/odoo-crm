@@ -2,7 +2,7 @@
 
 echo "Deploy k8s cluster..."
 
-read -p "Enter hostname for this server " custom_hostname
+read -p "Enter hostname for this server: " custom_hostname
 
 echo "Installing kubelet kubeadm kubectl..."
 hostnamectl set-hostname $custom_hostname
