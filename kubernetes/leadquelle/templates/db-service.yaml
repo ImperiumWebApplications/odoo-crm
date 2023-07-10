@@ -5,7 +5,7 @@ metadata:
   labels:
     service: db
   name: db
-  namespace: leadquelle
+  namespace: {{ .Values.env.CLUSTER_PROJECT_NAME }}
 spec:
   type: ClusterIP
   clusterIP: None

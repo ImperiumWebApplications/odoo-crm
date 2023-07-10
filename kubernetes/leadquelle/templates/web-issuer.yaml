@@ -1,14 +1,14 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: leadquelle-letsencrypt
-  namespace: leadquelle
+  name: {{ .Values.env.CLUSTER_PROJECT_NAME }}-letsencrypt
+  namespace: {{ .Values.env.CLUSTER_PROJECT_NAME }}
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: admin@leadquelle.com
+    email: admin@{{ .Values.env.ERP_DOMAIN }}
     privateKeySecretRef:
-      name: leadquelle-letsencrypt
+      name: {{ .Values.env.CLUSTER_PROJECT_NAME }}-letsencrypt
     solvers:
     - http01:
         ingress:

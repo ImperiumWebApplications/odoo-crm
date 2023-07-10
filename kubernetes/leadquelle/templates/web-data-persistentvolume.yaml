@@ -4,7 +4,7 @@ metadata:
   labels:
     type: data
   name: web-data-persistent-volume
-  namespace: leadquelle
+  namespace: {{ .Values.env.CLUSTER_PROJECT_NAME }}
 spec:
   accessModes:
   - ReadWriteOnce
@@ -24,7 +24,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   claimRef:
-    namespace: leadquelle
+    namespace: {{ .Values.env.CLUSTER_PROJECT_NAME }}
     name: web-data
   volumeMode: Filesystem
 ---
