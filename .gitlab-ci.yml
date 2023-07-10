@@ -2,6 +2,7 @@ variables:
   BASE_DOMAIN: leadquelle.net
   ROLLOUT_RESOURCE_TYPE: deployment
   KUBE_NAMESPACE: "leadquelle"
+  CLUSTER_PROJECT_NAME: "$KUBE_NAMESPACE"
   REVIEW_DISABLED: "true"
   HELM_UPGRADE_EXTRA_ARGS: "--set gitlab.env=$CI_ENVIRONMENT_SLUG,gitlab.app=$CI_PROJECT_PATH_SLUG"
 
@@ -108,7 +109,7 @@ build:
     - echo "Deploying custom-odoo-modules..."
     - cd kubernetes/leadquelle
     - helm package .
-    - envsubst < values.yaml | helm upgrade --install custom-odoo-modules ./custom-odoo-modules-1.0.0.tgz --create-namespace --namespace leadquelle --values -
+    - envsubst < values.yaml | helm upgrade --install custom-odoo-modules ./custom-odoo-modules-1.0.0.tgz --create-namespace --namespace $CLUSTER_PROJECT_NAME --values -
     - cd ../..
     - echo "Deploying custom-odoo-modules... done"
 
