@@ -105,12 +105,12 @@ build:
     - auto-deploy ensure_namespace
     - auto-deploy create_secret
     - apk update && apk add gettext
-    - echo "Deploying leadquelle..."
+    - echo "Deploying custom-odoo-modules..."
     - cd kubernetes/leadquelle
     - helm package .
-    - envsubst < values.yaml | helm upgrade --install leadquelle ./leadquelle-1.0.0.tgz --create-namespace --namespace leadquelle --values -
+    - envsubst < values.yaml | helm upgrade --install custom-odoo-modules ./custom-odoo-modules-1.0.0.tgz --create-namespace --namespace leadquelle --values -
     - cd ../..
-    - echo "Deploying leadquelle... done"
+    - echo "Deploying custom-odoo-modules... done"
 
 
 # Dev
