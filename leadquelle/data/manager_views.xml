@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="show_manage_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Manage Leadquelle</field>
+        <field name="res_model">leadquelle.manager.model</field>
+        <field name="view_mode">kanban</field>
+    </record>
+
+    <record id="leadquelle_manage_kanban" model="ir.ui.view">
+        <field name="name">leadquelle.manager.model.kanban</field>
+        <field name="model">leadquelle.manager.model</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <button name="execute_action" type="object">
+                                    <field readonly="1" name="label" options='{"no_open": True}'/>
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

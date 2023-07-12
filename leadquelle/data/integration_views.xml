@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="show_apis_integration" model="ir.actions.act_window">
+        <field name="name">All integrations</field>
+        <field name="res_model">leadquelle.api.integration</field>
+        <field name="view_mode">form</field>
+        <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                List of all integrations
+              </p><p>
+                Use this to view and edit integrations.
+              </p>
+        </field>
+    </record>
+
+    <record id="leadquelle_integrations_view_form" model="ir.ui.view">
+        <field name="name">leadquelle.api.integration.form</field>
+        <field name="model">leadquelle.api.integration</field>
+        <field name="arch" type="xml">
+            <form string="Integration" create="False" class="o_module_form">
+                <sheet>
+                    <notebook>
+                        <page string="Lead API integration for thirdparty">
+                            <group>
+                                <field name="user_id"/>
+                                <field name="thirdparty_integration_api_key"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
