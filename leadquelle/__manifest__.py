@@ -12,6 +12,10 @@
     'license': 'Other proprietary',
     'data': [
         'data/ir.model.access.csv',
+        'data/manager_views.xml',
+        'data/integration_views.xml',
+        'data/leadquelle_menus.xml',
+        'data/leadquelle.manager.model.csv',
     ],
     'route': [
         '/api/v1', 'leadquelle.controllers.API:APIEndpoint',

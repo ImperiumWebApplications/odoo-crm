@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="leadquelle_menu_root" name="Leadquelle" web_icon="leadquelle,static/description/icon.png" sequence="1">
+        <menuitem id="leadquelle_manage_menu" name="Manage" sequence="1">
+            <menuitem id="leadquelle_manage_dashboard_action" action="show_manage_dashboard_action"/>
+        </menuitem>
+    </menuitem>
+</odoo>

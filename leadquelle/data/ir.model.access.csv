@@ -1,1 +1,3 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+leadquelle.access_leadquelle_manager_model,access_leadquelle_manager_model,leadquelle.model_leadquelle_manager_model,base.group_user,1,0,0,0
+leadquelle.access_leadquelle_api_integration,access_leadquelle_api_integration,leadquelle.model_leadquelle_api_integration,base.group_user,1,1,1,1
