@@ -1,10 +1,11 @@
 FROM odoo:16.0
-MAINTAINER admin@leadquelle.com
+MAINTAINER admin@leadquelle.net
 USER root
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
+COPY ./leadquelle /mnt/extra-addons/leadquelle
 COPY ./account_ext /mnt/extra-addons/account_ext
 COPY ./modern_theme /mnt/extra-addons/modern_theme
 COPY ./om_account/accounting_pdf_reports /mnt/extra-addons/accounting_pdf_reports
