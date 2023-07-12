@@ -17,6 +17,8 @@ def validate_signature(checking_request, secret_key):
         return False
     mac = hmac.new(bytes(secret_key, 'latin1'), msg=checking_request.get_data(), digestmod=hashlib.sha1)
     print(str(mac.hexdigest()))
+    print(str(mac.hexdigest()))
+    print(str(mac.hexdigest()))
     return hmac.compare_digest(str(mac.hexdigest()), str(signature))
 
 
