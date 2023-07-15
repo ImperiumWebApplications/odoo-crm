@@ -16,8 +16,6 @@
         'data/integration_views.xml',
         'data/leadquelle_menus.xml',
         'data/leadquelle.manager.model.csv',
-        'views/res_partner_views.xml',
-
     ],
     'route': [
         '/api/v1', 'leadquelle.controllers.API:APIEndpoint',
